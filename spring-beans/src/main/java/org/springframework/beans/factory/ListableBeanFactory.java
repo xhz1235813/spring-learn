@@ -54,7 +54,7 @@ import org.springframework.core.ResolvableType;
  * @see HierarchicalBeanFactory
  * @see BeanFactoryUtils
  */
-public interface ListableBeanFactory extends BeanFactory {
+public interface ListableBeanFactory extends BeanFactory {//1.只列举这个容器中的bean，不会列举父容器中的bean。2.通过BeanFactoryUtils来获取父容器的bean。3.
 
 	/**
 	 * Check if this bean factory contains a bean definition with the given name.

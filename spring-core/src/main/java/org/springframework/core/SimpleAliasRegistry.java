@@ -117,7 +117,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	 * @param name the target name to find aliases for
 	 * @param result the resulting aliases list
 	 */
-	private void retrieveAliases(String name, List<String> result) {
+	private void retrieveAliases(String name, List<String> result) {//查找名称为name的bean的别名，取到别名alias后递归查找名称为alias的bean
 		for (Map.Entry<String, String> entry : this.aliasMap.entrySet()) {
 			String registeredName = entry.getValue();
 			if (registeredName.equals(name)) {

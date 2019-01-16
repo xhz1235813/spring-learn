@@ -30,11 +30,11 @@ import org.springframework.util.Assert;
  * @see org.springframework.beans.factory.annotation.Qualifier
  */
 @SuppressWarnings("serial")
-public class AutowireCandidateQualifier extends BeanMetadataAttributeAccessor {
+public class AutowireCandidateQualifier extends BeanMetadataAttributeAccessor {//与Qualifier注解搭配
 
 	public static String VALUE_KEY = "value";
 
-	private final String typeName;
+	private final String typeName;//注解的类名
 
 
 	/**

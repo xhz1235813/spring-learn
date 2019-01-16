@@ -47,7 +47,7 @@ import org.springframework.util.Assert;
  * @see GenericCollectionTypeResolver
  * @see org.springframework.core.annotation.SynthesizingMethodParameter
  */
-public class MethodParameter {
+public class MethodParameter {//表示构造器/方法中的参数
 
 	private final Method method;
 

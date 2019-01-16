@@ -74,6 +74,6 @@ public interface ResourceLoader {
 	 * ClassLoader isn't accessible)
 	 * @see org.springframework.util.ClassUtils#getDefaultClassLoader()
 	 */
-	ClassLoader getClassLoader();
+	ClassLoader getClassLoader();//FIXME 容器只有一个ClassLoader，所有的类都是通过这个ClassLoader加载？
 
 }

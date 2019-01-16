@@ -27,7 +27,7 @@ import org.springframework.core.AttributeAccessorSupport;
  * @since 2.5
  */
 @SuppressWarnings("serial")
-public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport implements BeanMetadataElement {
+public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport implements BeanMetadataElement {//1。可以设置依赖的来源，2。可以对属性进行增删改查
 
 	private Object source;
 

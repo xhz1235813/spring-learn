@@ -153,7 +153,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private boolean primary = false;
 
 	private final Map<String, AutowireCandidateQualifier> qualifiers =
-			new LinkedHashMap<String, AutowireCandidateQualifier>(0);
+			new LinkedHashMap<String, AutowireCandidateQualifier>(0);//FIXME 这个类被哪些Qualifier指明？？
 
 	private boolean nonPublicAccessAllowed = true;
 
@@ -165,7 +165,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private MethodOverrides methodOverrides = new MethodOverrides();
 
-	private String factoryBeanName;
+	private String factoryBeanName;//FIXME factoryBean与bean的关系是什么？
 
 	private String factoryMethodName;
 
@@ -608,7 +608,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * keyed by the qualifier's type name.
 	 * @see AutowireCandidateQualifier#getTypeName()
 	 */
-	public void addQualifier(AutowireCandidateQualifier qualifier) {
+	public void addQualifier(AutowireCandidateQualifier qualifier) {//添加@Qualifier注解，key是字段的类型
 		this.qualifiers.put(qualifier.getTypeName(), qualifier);
 	}
 

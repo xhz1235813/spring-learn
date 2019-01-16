@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
  * @since 2.0
  */
 @SuppressWarnings("serial")
-public abstract class AttributeAccessorSupport implements AttributeAccessor, Serializable {
+public abstract class AttributeAccessorSupport implements AttributeAccessor, Serializable {//对属性进行增删改查
 
 	/** Map with String keys and Object values */
 	private final Map<String, Object> attributes = new LinkedHashMap<String, Object>(0);

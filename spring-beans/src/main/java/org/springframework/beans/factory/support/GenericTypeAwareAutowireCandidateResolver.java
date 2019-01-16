@@ -113,7 +113,7 @@ public class GenericTypeAwareAutowireCandidateResolver implements AutowireCandid
 		return dependencyType.isAssignableFrom(targetType);
 	}
 
-	protected RootBeanDefinition getResolvedDecoratedDefinition(RootBeanDefinition rbd) {
+	protected RootBeanDefinition getResolvedDecoratedDefinition(RootBeanDefinition rbd) {//rbd与父bean合并，并返回；如果没有父bean则返回null
 		BeanDefinitionHolder decDef = rbd.getDecoratedDefinition();
 		if (decDef != null && this.beanFactory instanceof ConfigurableListableBeanFactory) {
 			ConfigurableListableBeanFactory clbf = (ConfigurableListableBeanFactory) this.beanFactory;

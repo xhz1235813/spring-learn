@@ -29,7 +29,7 @@ package org.springframework.beans.factory;
  * @since 07.07.2003
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory
  */
-public interface HierarchicalBeanFactory extends BeanFactory {
+public interface HierarchicalBeanFactory extends BeanFactory {//可以设置父容器的BeanFactory
 
 	/**
 	 * Return the parent bean factory, or {@code null} if there is none.
@@ -45,6 +45,6 @@ public interface HierarchicalBeanFactory extends BeanFactory {
 	 * @return whether a bean with the given name is defined in the local factory
 	 * @see BeanFactory#containsBean
 	 */
-	boolean containsLocalBean(String name);
+	boolean containsLocalBean(String name);//忽略父容器，只在这个容器中查找有没有名称为name的bean
 
 }

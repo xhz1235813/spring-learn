@@ -149,16 +149,16 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	private boolean allowEagerClassLoading = true;
 
 	/** Optional OrderComparator for dependency Lists and arrays */
-	private Comparator<Object> dependencyComparator;
+	private Comparator<Object> dependencyComparator;//依赖注入顺序的比较器，与@Order对应
 
 	/** Resolver to use for checking if a bean definition is an autowire candidate */
-	private AutowireCandidateResolver autowireCandidateResolver = new SimpleAutowireCandidateResolver();
+	private AutowireCandidateResolver autowireCandidateResolver = new SimpleAutowireCandidateResolver();//定义自动注入的规则
 
 	/** Map from dependency type to corresponding autowired value */
 	private final Map<Class<?>, Object> resolvableDependencies = new ConcurrentHashMap<Class<?>, Object>(16);
 
 	/** Map of bean definition objects, keyed by bean name */
-	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>(256);
+	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>(256);//FIXME 是容器内所有的bean吗？？
 
 	/** Map of singleton and non-singleton bean names, keyed by dependency type */
 	private final Map<Class<?>, String[]> allBeanNamesByType = new ConcurrentHashMap<Class<?>, String[]>(64);
@@ -685,7 +685,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 		return resolver.isAutowireCandidate(
-				new BeanDefinitionHolder(mbd, beanName, getAliases(beanDefinitionName)), descriptor);
+				new BeanDefinitionHolder(mbd, beanName, getAliases(beanDefinitionName)), descriptor);//TODO 怎么判断是否可以被自动注入的
 	}
 
 	@Override
@@ -999,7 +999,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Set<String> autowiredBeanNames, TypeConverter typeConverter) throws BeansException {
 
 		descriptor.initParameterNameDiscovery(getParameterNameDiscoverer());
-		if (descriptor.getDependencyType().equals(javaUtilOptionalClass)) {
+		if (descriptor.getDependencyType().equals(javaUtilOptionalClass)) {//
 			return new OptionalDependencyFactory().createOptionalDependency(descriptor, beanName);
 		}
 		else if (ObjectFactory.class == descriptor.getDependencyType()) {
@@ -1021,12 +1021,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Set<String> autowiredBeanNames, TypeConverter typeConverter) throws BeansException {
 
 		Class<?> type = descriptor.getDependencyType();
-		Object value = getAutowireCandidateResolver().getSuggestedValue(descriptor);
+		Object value = getAutowireCandidateResolver().getSuggestedValue(descriptor);//取@Value("XX")中的XX，即value的具体值
 		if (value != null) {
 			if (value instanceof String) {
-				String strVal = resolveEmbeddedValue((String) value);
+				String strVal = resolveEmbeddedValue((String) value);//使用@Value值的解析器对value进行解析
 				BeanDefinition bd = (beanName != null && containsBean(beanName) ? getMergedBeanDefinition(beanName) : null);
-				value = evaluateBeanDefinitionString(strVal, bd);
+				value = evaluateBeanDefinitionString(strVal, bd);//计算value的值
 			}
 			TypeConverter converter = (typeConverter != null ? typeConverter : getTypeConverter());
 			return (descriptor.getField() != null ?
@@ -1177,23 +1177,23 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		String[] candidateNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 				this, requiredType, true, descriptor.isEager());
 		Map<String, Object> result = new LinkedHashMap<String, Object>(candidateNames.length);
-		for (Class<?> autowiringType : this.resolvableDependencies.keySet()) {
+		for (Class<?> autowiringType : this.resolvableDependencies.keySet()) {//首先在类型和bean的缓存中查找。相同的类型只有一个自动注入的bean
 			if (autowiringType.isAssignableFrom(requiredType)) {
 				Object autowiringValue = this.resolvableDependencies.get(autowiringType);
-				autowiringValue = AutowireUtils.resolveAutowiringValue(autowiringValue, requiredType);
+				autowiringValue = AutowireUtils.resolveAutowiringValue(autowiringValue, requiredType);//检查autowiringValue是否是ObjectFactory类型。没有对autowiringValue与requiredType的类型进行匹配检查。
 				if (requiredType.isInstance(autowiringValue)) {
-					result.put(ObjectUtils.identityToString(autowiringValue), autowiringValue);
+					result.put(ObjectUtils.identityToString(autowiringValue), autowiringValue);//给autowiringValue起一个名字，用'类型'+@+'16进制hashcode'表示
 					break;
 				}
 			}
 		}
-		for (String candidateName : candidateNames) {
+		for (String candidateName : candidateNames) {//再在所有该类型的bean中查找
 			if (!isSelfReference(beanName, candidateName) && isAutowireCandidate(candidateName, descriptor)) {
 				result.put(candidateName, getBean(candidateName));
 			}
 		}
 		if (result.isEmpty()) {
-			DependencyDescriptor fallbackDescriptor = descriptor.forFallbackMatch();
+			DependencyDescriptor fallbackDescriptor = descriptor.forFallbackMatch();//FIXME fallback match 是什么意思？？
 			for (String candidateName : candidateNames) {
 				if (!candidateName.equals(beanName) && isAutowireCandidate(candidateName, fallbackDescriptor)) {
 					result.put(candidateName, getBean(candidateName));
@@ -1211,7 +1211,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * @param descriptor the target dependency to match against
 	 * @return the name of the autowire candidate, or {@code null} if none found
 	 */
-	protected String determineAutowireCandidate(Map<String, Object> candidateBeans, DependencyDescriptor descriptor) {
+	protected String determineAutowireCandidate(Map<String, Object> candidateBeans, DependencyDescriptor descriptor) {//确定哪个bean被注解。先查找被@Primary标注的，再查找被@Order标注的，最后找名字相同的bean
 		Class<?> requiredType = descriptor.getDependencyType();
 		String primaryCandidate = determinePrimaryCandidate(candidateBeans, requiredType);
 		if (primaryCandidate != null) {
@@ -1226,7 +1226,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			String candidateBeanName = entry.getKey();
 			Object beanInstance = entry.getValue();
 			if ((beanInstance != null && this.resolvableDependencies.containsValue(beanInstance)) ||
-					matchesBeanName(candidateBeanName, descriptor.getDependencyName())) {
+					matchesBeanName(candidateBeanName, descriptor.getDependencyName())) {//FIXME resolvableDependencies是做什么的呢？？
 				return candidateBeanName;
 			}
 		}
@@ -1241,12 +1241,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * @return the name of the primary candidate, or {@code null} if none found
 	 * @see #isPrimary(String, Object)
 	 */
-	protected String determinePrimaryCandidate(Map<String, Object> candidateBeans, Class<?> requiredType) {
+	protected String determinePrimaryCandidate(Map<String, Object> candidateBeans, Class<?> requiredType) {//查找被@Primary标注的bean
 		String primaryBeanName = null;
 		for (Map.Entry<String, Object> entry : candidateBeans.entrySet()) {
 			String candidateBeanName = entry.getKey();
 			Object beanInstance = entry.getValue();
-			if (isPrimary(candidateBeanName, beanInstance)) {
+			if (isPrimary(candidateBeanName, beanInstance)) {//检查容器中（包括父容器）中这个candidateBeanName名称的bean的primary字段是否为true
 				if (primaryBeanName != null) {
 					boolean candidateLocal = containsBeanDefinition(candidateBeanName);
 					boolean primaryLocal = containsBeanDefinition(primaryBeanName);
@@ -1277,7 +1277,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * or {@code null} if none found
 	 * @see #getPriority(Object)
 	 */
-	protected String determineHighestPriorityCandidate(Map<String, Object> candidateBeans, Class<?> requiredType) {
+	protected String determineHighestPriorityCandidate(Map<String, Object> candidateBeans, Class<?> requiredType) {//查找@Order值最小的bean。不存在时，返回null
 		String highestPriorityBeanName = null;
 		Integer highestPriority = null;
 		for (Map.Entry<String, Object> entry : candidateBeans.entrySet()) {
@@ -1312,9 +1312,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * @param beanInstance the corresponding bean instance (can be null)
 	 * @return whether the given bean qualifies as primary
 	 */
-	protected boolean isPrimary(String beanName, Object beanInstance) {
+	protected boolean isPrimary(String beanName, Object beanInstance) {//根据BeanDefinition的primary字段，判断该bean是否是primary
 		if (containsBeanDefinition(beanName)) {
-			return getMergedLocalBeanDefinition(beanName).isPrimary();
+			return getMergedLocalBeanDefinition(beanName).isPrimary();//检查BeanDefinition的primary字段是否为true
 		}
 		BeanFactory parentFactory = getParentBeanFactory();
 		return (parentFactory instanceof DefaultListableBeanFactory &&
@@ -1333,7 +1333,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * @param beanInstance the bean instance to check (can be {@code null})
 	 * @return the priority assigned to that bean or {@code null} if none is set
 	 */
-	protected Integer getPriority(Object beanInstance) {
+	protected Integer getPriority(Object beanInstance) {//通过解析beanInstance的class解析@Order注解的值
 		Comparator<Object> comparator = getDependencyComparator();
 		if (comparator instanceof OrderComparator) {
 			return ((OrderComparator) comparator).getPriority(beanInstance);
@@ -1345,7 +1345,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * Determine whether the given candidate name matches the bean name or the aliases
 	 * stored in this bean definition.
 	 */
-	protected boolean matchesBeanName(String beanName, String candidateName) {
+	protected boolean matchesBeanName(String beanName, String candidateName) {//判断beanName与candidateName的名字是不是一致，包括beanName与candidateName相等、beanName的别名与candidateName相等两种情况
 		return (candidateName != null &&
 				(candidateName.equals(beanName) || ObjectUtils.containsElement(getAliases(beanName), candidateName)));
 	}
@@ -1355,7 +1355,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * i.e. whether the candidate points back to the original bean or to a factory method
 	 * on the original bean.
 	 */
-	private boolean isSelfReference(String beanName, String candidateName) {
+	private boolean isSelfReference(String beanName, String candidateName) {//FIXME 作用是什么
 		return (beanName != null && candidateName != null &&
 				(beanName.equals(candidateName) || (containsBeanDefinition(candidateName) &&
 						beanName.equals(getMergedLocalBeanDefinition(candidateName).getFactoryBeanName()))));

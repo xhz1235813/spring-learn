@@ -559,7 +559,7 @@ public abstract class ObjectUtils {
 	 * @return the object's identity as String representation,
 	 * or an empty String if the object was {@code null}
 	 */
-	public static String identityToString(Object obj) {
+	public static String identityToString(Object obj) {//对象的id，用'类型'+@+'16进制hashcode表示'
 		if (obj == null) {
 			return EMPTY_STRING;
 		}

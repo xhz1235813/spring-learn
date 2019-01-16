@@ -931,7 +931,7 @@ public abstract class AnnotationUtils {
 	 * @see #getAnnotationAttributes(Annotation, boolean, boolean)
 	 * @see #getAnnotationAttributes(AnnotatedElement, Annotation, boolean, boolean)
 	 */
-	public static Map<String, Object> getAnnotationAttributes(Annotation annotation) {
+	public static Map<String, Object> getAnnotationAttributes(Annotation annotation) {//返回注解的key，value值
 		return getAnnotationAttributes(null, annotation);
 	}
 
@@ -1257,7 +1257,7 @@ public abstract class AnnotationUtils {
 		try {
 			Method method = annotation.annotationType().getDeclaredMethod(attributeName);
 			ReflectionUtils.makeAccessible(method);
-			return method.invoke(annotation);
+			return method.invoke(annotation);//取得@Value("XX")中的XX，即value的具体值。
 		}
 		catch (Exception ex) {
 			return null;

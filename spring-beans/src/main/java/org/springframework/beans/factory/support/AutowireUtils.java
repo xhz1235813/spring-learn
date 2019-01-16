@@ -144,7 +144,7 @@ abstract class AutowireUtils {
 	 * @param requiredType the type to assign the result to
 	 * @return the resolved value
 	 */
-	public static Object resolveAutowiringValue(Object autowiringValue, Class<?> requiredType) {
+	public static Object resolveAutowiringValue(Object autowiringValue, Class<?> requiredType) {//解析注入的value是否是ObjectFactory类型的，如果是则判断需要的类型是否是ObjectFactory，如果是直接返回，否则调用getObject()返回具体对象。如果value不是ObjectFactory类型，直接返回value。
 		if (autowiringValue instanceof ObjectFactory && !requiredType.isInstance(autowiringValue)) {
 			ObjectFactory<?> factory = (ObjectFactory<?>) autowiringValue;
 			if (autowiringValue instanceof Serializable && requiredType.isInterface()) {

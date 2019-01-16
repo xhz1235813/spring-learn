@@ -40,7 +40,7 @@ import org.springframework.util.Assert;
  * @since 2.5
  */
 @SuppressWarnings("serial")
-public class DependencyDescriptor implements Serializable {
+public class DependencyDescriptor implements Serializable {//依赖关系的描述，b注入到a，就站在a的角度
 
 	private transient MethodParameter methodParameter;
 
@@ -207,7 +207,7 @@ public class DependencyDescriptor implements Serializable {
 	/**
 	 * Build a ResolvableType object for the wrapped parameter/field.
 	 */
-	public ResolvableType getResolvableType() {
+	public ResolvableType getResolvableType() {//
 		return (this.field != null ? ResolvableType.forField(this.field, this.nestingLevel, this.containingClass) :
 				ResolvableType.forMethodParameter(this.methodParameter));
 	}
@@ -259,13 +259,13 @@ public class DependencyDescriptor implements Serializable {
 	 * Determine the declared (non-generic) type of the wrapped parameter/field.
 	 * @return the declared type (never {@code null})
 	 */
-	public Class<?> getDependencyType() {
+	public Class<?> getDependencyType() {//优先返回field的类型；如果field为null，返回函数参数的变量类型
 		if (this.field != null) {
 			if (this.nestingLevel > 1) {
 				Type type = this.field.getGenericType();
 				for (int i = 2; i <= this.nestingLevel; i++) {
 					if (type instanceof ParameterizedType) {
-						Type[] args = ((ParameterizedType) type).getActualTypeArguments();
+						Type[] args = ((ParameterizedType) type).getActualTypeArguments();//泛型的实际类型
 						type = args[args.length - 1];
 					}
 				}
