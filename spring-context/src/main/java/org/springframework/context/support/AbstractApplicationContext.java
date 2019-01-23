@@ -129,7 +129,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * If none is supplied, message resolution is delegated to the parent.
 	 * @see MessageSource
 	 */
-	public static final String MESSAGE_SOURCE_BEAN_NAME = "messageSource";
+	public static final String MESSAGE_SOURCE_BEAN_NAME = "messageSource";//MessageSource的bean名称，用于获取国际化信息
 
 	/**
 	 * Name of the LifecycleProcessor bean in the factory.

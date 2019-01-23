@@ -49,7 +49,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	 * at the time of this ResourceLoader's initialization.
 	 * @see java.lang.Thread#getContextClassLoader()
 	 */
-	public DefaultResourceLoader() {
+	public DefaultResourceLoader() {//获取当前线程的classLoader
 		this.classLoader = ClassUtils.getDefaultClassLoader();
 	}
 
@@ -80,7 +80,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	 * @see ClassPathResource
 	 */
 	@Override
-	public ClassLoader getClassLoader() {
+	public ClassLoader getClassLoader() {//如果classLoader指定就使用指定的classLoader，否则使用当前线程的classLoader
 		return (this.classLoader != null ? this.classLoader : ClassUtils.getDefaultClassLoader());
 	}
 

@@ -48,7 +48,7 @@ import org.springframework.util.Assert;
  * @author Juergen Hoeller
  * @since 3.0
  */
-public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactoryAware {
+public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactoryAware {//FIXME 用来干什么的，没看懂
 
 	private final Log logger = LogFactory.getLog(getClass());
 
@@ -128,7 +128,7 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 	// internal helpers
 
 	private void startBeans(boolean autoStartupOnly) {
-		Map<String, Lifecycle> lifecycleBeans = getLifecycleBeans();
+		Map<String, Lifecycle> lifecycleBeans = getLifecycleBeans();//查找Lifecycle类型的bean
 		Map<Integer, LifecycleGroup> phases = new HashMap<Integer, LifecycleGroup>();
 		for (Map.Entry<String, ? extends Lifecycle> entry : lifecycleBeans.entrySet()) {
 			Lifecycle bean = entry.getValue();
@@ -268,9 +268,9 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 	 * as well as all SmartLifecycle beans (even if they are marked as lazy-init).
 	 * @return the Map of applicable beans, with bean names as keys and bean instances as values
 	 */
-	protected Map<String, Lifecycle> getLifecycleBeans() {
+	protected Map<String, Lifecycle> getLifecycleBeans() {//zhao
 		Map<String, Lifecycle> beans = new LinkedHashMap<String, Lifecycle>();
-		String[] beanNames = this.beanFactory.getBeanNamesForType(Lifecycle.class, false, false);
+		String[] beanNames = this.beanFactory.getBeanNamesForType(Lifecycle.class, false, false);//查找Lifecycle类型的bean
 		for (String beanName : beanNames) {
 			String beanNameToRegister = BeanFactoryUtils.transformedBeanName(beanName);
 			boolean isFactoryBean = this.beanFactory.isFactoryBean(beanNameToRegister);

@@ -35,7 +35,7 @@ import java.util.Locale;
  * @see org.springframework.context.support.ResourceBundleMessageSource
  * @see org.springframework.context.support.ReloadableResourceBundleMessageSource
  */
-public interface MessageSource {
+public interface MessageSource {//用于获取国际化信息
 
 	/**
 	 * Try to resolve the message. Return default message if no message was found.

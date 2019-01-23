@@ -23,7 +23,7 @@ package org.springframework.context;
  * @author Juergen Hoeller
  * @since 3.0
  */
-public interface LifecycleProcessor extends Lifecycle {
+public interface LifecycleProcessor extends Lifecycle {//FIXME 用来干什么的，没看懂
 
 	/**
 	 * Notification of context refresh, e.g. for auto-starting components.

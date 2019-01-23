@@ -62,24 +62,24 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * to allow the LoadTimeWeaver to process all actual bean classes.
 	 * @see org.springframework.instrument.classloading.LoadTimeWeaver
 	 */
-	String LOAD_TIME_WEAVER_BEAN_NAME = "loadTimeWeaver";
+	String LOAD_TIME_WEAVER_BEAN_NAME = "loadTimeWeaver";   //实现切面注入的方式，https://blog.csdn.net/xuezhezhishen/article/details/52799011
 
 	/**
 	 * Name of the {@link Environment} bean in the factory.
 	 */
-	String ENVIRONMENT_BEAN_NAME = "environment";
+	String ENVIRONMENT_BEAN_NAME = "environment";   //Spring的属性和运行环境的配置，https://blog.csdn.net/sdlyjzh/article/details/79307239
 
 	/**
 	 * Name of the System properties bean in the factory.
 	 * @see java.lang.System#getProperties()
 	 */
-	String SYSTEM_PROPERTIES_BEAN_NAME = "systemProperties";
+	String SYSTEM_PROPERTIES_BEAN_NAME = "systemProperties";//java中，通过System拿到Properties的bean
 
 	/**
 	 * Name of the System environment bean in the factory.
 	 * @see java.lang.System#getenv()
 	 */
-	String SYSTEM_ENVIRONMENT_BEAN_NAME = "systemEnvironment";
+	String SYSTEM_ENVIRONMENT_BEAN_NAME = "systemEnvironment";//java中，通过System拿到配置属性的kv
 
 
 	/**
@@ -160,7 +160,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * {@code close} calls on an already closed context will be ignored.
 	 */
 	@Override
-	void close();
+	void close();//关闭容器，释放容器的资源，注销beans；只是该容器关系，父容器不发生变化
 
 	/**
 	 * Determine whether this application context is active, that is,
