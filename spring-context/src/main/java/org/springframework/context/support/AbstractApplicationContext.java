@@ -121,6 +121,10 @@ import org.springframework.util.ReflectionUtils;
  * @see org.springframework.context.ApplicationListener
  * @see org.springframework.context.MessageSource
  */
+
+/**
+ * ApplicationContext本身就是一个资源加载器
+ */
 public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		implements ConfigurableApplicationContext, DisposableBean {
 
@@ -137,7 +141,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.context.LifecycleProcessor
 	 * @see org.springframework.context.support.DefaultLifecycleProcessor
 	 */
-	public static final String LIFECYCLE_PROCESSOR_BEAN_NAME = "lifecycleProcessor";
+	public static final String LIFECYCLE_PROCESSOR_BEAN_NAME = "lifecycleProcessor";//FIXME 不清楚Lifecycle是干嘛的。。。
 
 	/**
 	 * Name of the ApplicationEventMulticaster bean in the factory.
@@ -145,7 +149,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.context.event.ApplicationEventMulticaster
 	 * @see org.springframework.context.event.SimpleApplicationEventMulticaster
 	 */
-	public static final String APPLICATION_EVENT_MULTICASTER_BEAN_NAME = "applicationEventMulticaster";
+	public static final String APPLICATION_EVENT_MULTICASTER_BEAN_NAME = "applicationEventMulticaster";//广播bean事件
 
 
 	static {
@@ -159,10 +163,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/** Unique id for this context, if any */
-	private String id = ObjectUtils.identityToString(this);
+	private String id = ObjectUtils.identityToString(this);//类名@16进制内存地址
 
 	/** Display name */
-	private String displayName = ObjectUtils.identityToString(this);
+	private String displayName = ObjectUtils.identityToString(this);//类名@16进制内存地址
 
 	/** Parent context */
 	private ApplicationContext parent;
@@ -172,7 +176,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/** BeanFactoryPostProcessors to apply on refresh */
 	private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors =
-			new ArrayList<BeanFactoryPostProcessor>();
+			new ArrayList<BeanFactoryPostProcessor>();//
 
 	/** System time in milliseconds when this context started */
 	private long startupDate;
@@ -211,7 +215,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
-	public AbstractApplicationContext() {
+	public AbstractApplicationContext() {//初始化时只要配置资源加载器，可见资源加载器的重要性
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 
@@ -355,7 +359,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @param eventType the resolved event type, if known
 	 * @since 4.2
 	 */
-	protected void publishEvent(Object event, ResolvableType eventType) {
+	protected void publishEvent(Object event, ResolvableType eventType) {//首先判断event是不是ApplicationEvent类型，如果不是则封装成PayloadApplicationEvent；然后判断multicaster有没有初始化，如果没有先保存起来，如果初始化则立即广播；最后，在父容器中广播even
 		Assert.notNull(event, "Event must not be null");
 		if (logger.isTraceEnabled()) {
 			logger.trace("Publishing event in " + getDisplayName() + ": " + event);
@@ -433,7 +437,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.core.io.support.PathMatchingResourcePatternResolver
 	 */
 	protected ResourcePatternResolver getResourcePatternResolver() {
-		return new PathMatchingResourcePatternResolver(this);
+		return new PathMatchingResourcePatternResolver(this);//这里好像是一个回调函数
 	}
 
 
@@ -1329,7 +1333,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #closeBeanFactory()
 	 */
 	@Override
-	public abstract ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
+	public abstract ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;//FIXME 不清楚是干什么的
 
 
 	/**

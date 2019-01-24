@@ -55,7 +55,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  * @see org.springframework.core.io.ResourceLoader
  */
 public interface ApplicationContext extends EnvironmentCapable, ListableBeanFactory, HierarchicalBeanFactory,
-		MessageSource, ApplicationEventPublisher, ResourcePatternResolver {
+		MessageSource, ApplicationEventPublisher, ResourcePatternResolver {//除了设置parent没有特别有用的功能，主要的功能还是在BeanFactory中
 
 	/**
 	 * Return the unique id of this application context.
